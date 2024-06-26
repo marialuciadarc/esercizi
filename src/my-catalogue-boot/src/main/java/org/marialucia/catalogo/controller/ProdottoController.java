@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,35 +48,24 @@ public class ProdottoController {
 	
 	@ResponseBody
 	@PostMapping("/aggiungi")
-	public String add(@RequestParam(name = "nome") String nome, 
-			@RequestParam(name = "descrizione") String descrizione,
-			@RequestParam(name = "prezzo") String prezzo) {
+	public String add(@RequestBody Prodotto prodotto) {
 		
 		try {
-			Prodotto p = new Prodotto(nome, descrizione, Double.parseDouble(prezzo));
-			prodottoServ.create(p);
-			return "aggiunto:" + p.getNome() + " " + p.getDescrizione();
+			prodottoServ.create(prodotto);
+			return "aggiunto:" + prodotto.getNome() + " " + prodotto.getDescrizione();
 		} catch (Exception e) {
 			return "c'è stato un errore"+e.getMessage();		
 		}
 	}
 		
 	
-
 	@ResponseBody
 	@PutMapping("/modifica")
-	public String update(@RequestParam(name = "id") String id,
-			@RequestParam(name = "nome") String nome,
-			@RequestParam(name = "descrizione") String descrizione,
-			@RequestParam(name = "prezzo") String prezzo) {
+	public String update(@RequestBody Prodotto prodotto) {
 		
 		try {
-			Prodotto p = prodottoServ.getById(Integer.parseInt(id)).get();
-			p.setNome(nome);
-			p.setDescrizione(descrizione);
-			p.setPrezzo(Double.parseDouble(prezzo));
-			prodottoServ.update(Integer.parseInt(id), p);
-			return "modificato:" + id + " " + nome;
+			prodottoServ.update((prodotto.getId()), prodotto);
+			return "modificato:" + prodotto.getId() + " " + prodotto.getNome();
 		} catch (Exception e) {
 			return "c'è stato un errore: "+e.getMessage();
 		}
