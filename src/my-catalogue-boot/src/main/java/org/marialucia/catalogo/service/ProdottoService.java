@@ -28,7 +28,10 @@ public class ProdottoService {
 		if (foundProdotto.isEmpty()) {
 			return Optional.empty();
 		}
+		foundProdotto.get().setNome(prodotto.getNome());
 		foundProdotto.get().setDescrizione(prodotto.getDescrizione());
+		foundProdotto.get().setPrezzo(prodotto.getPrezzo());
+		
 		prodottiRepo.save(foundProdotto.get());
 		return foundProdotto;
 	}

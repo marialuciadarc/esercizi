@@ -8,7 +8,10 @@ import org.marialucia.catalogo.model.Prodotto;
 import org.marialucia.catalogo.service.ProdottoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -43,7 +46,7 @@ public class ProdottoController {
 	}
 	
 	@ResponseBody
-	@GetMapping("/aggiungi")
+	@PostMapping("/aggiungi")
 	public String add(@RequestParam(name = "nome") String nome, 
 			@RequestParam(name = "descrizione") String descrizione,
 			@RequestParam(name = "prezzo") String prezzo) {
@@ -60,13 +63,17 @@ public class ProdottoController {
 	
 
 	@ResponseBody
-	@GetMapping("/modifica")
+	@PutMapping("/modifica")
 	public String update(@RequestParam(name = "id") String id,
-			@RequestParam(name = "nome") String nome) {
+			@RequestParam(name = "nome") String nome,
+			@RequestParam(name = "descrizione") String descrizione,
+			@RequestParam(name = "prezzo") String prezzo) {
 		
 		try {
 			Prodotto p = prodottoServ.getById(Integer.parseInt(id)).get();
 			p.setNome(nome);
+			p.setDescrizione(descrizione);
+			p.setPrezzo(Double.parseDouble(prezzo));
 			prodottoServ.update(Integer.parseInt(id), p);
 			return "modificato:" + id + " " + nome;
 		} catch (Exception e) {
@@ -75,7 +82,7 @@ public class ProdottoController {
 	}
 	
 	@ResponseBody
-	@GetMapping("/elimina")
+	@DeleteMapping("/elimina")
 	public String update(@RequestParam(name = "id") String id) {
 		boolean trovato = prodottoServ.delete(Integer.parseInt(id));
 		
